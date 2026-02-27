@@ -1,6 +1,6 @@
 from math import sqrt
 
-struct Vec3(Writable):
+struct Vec3(Writable, ImplicitlyCopyable):
     var e: SIMD[DType.float64, 3]
 
     fn __init__(out self, e1: Float64, e2: Float64, e3: Float64):
@@ -77,7 +77,7 @@ struct Vec3(Writable):
     fn write_to[T: Writer](self, mut writer: T):
         writer.write(self.__str__())
 
-comptime Point = Vec3
+comptime Point3 = Vec3
 comptime Color = Vec3
 
 fn write_color[T: Writer](color: Color, mut writer: T):
