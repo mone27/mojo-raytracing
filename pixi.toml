@@ -15,4 +15,6 @@ libc = { family = "glibc", version = "2.34" }
 [dependencies]
 jupyterlab = ">=4.5.5,<5"
 mojo = "*"
+max = ">=26.2.0.dev2026022605,<27"
+modular = ">=26.2.0.dev2026022605,<27"
 
