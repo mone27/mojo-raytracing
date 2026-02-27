@@ -6,14 +6,14 @@ from math import sqrt
 
 fn hit_sphere(center: Point3, radius: Float64, r: Ray) -> Float64:
     oc = center - r.orig
-    a = r.dir.dot(r.dir)
-    b = -2.0 * r.dir.dot(oc)
+    a = r.dir.length_squared()
+    h = r.dir.dot(oc)
     c = oc.dot(oc) - radius * radius
-    discriminant = b * b - 4 * a * c
+    discriminant = h * h - a * c
     if discriminant < 0:
         return -1.0
     else:
-        return (-b - sqrt(discriminant)) / (2.0 * a)
+        return (h - sqrt(discriminant)) / a
 
 fn ray_color(r: Ray) -> Color:
     t = hit_sphere(Point3(0,0,-1), 0.5, r)
