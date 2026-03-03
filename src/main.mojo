@@ -1,7 +1,4 @@
-from sys import stderr
-from vec3 import Color, write_color, Point3, Vec3
-from ray import Ray
-from math import sqrt
+from rtweekend import *
 
 
 fn hit_sphere(center: Point3, radius: Float64, r: Ray) -> Float64:
@@ -15,11 +12,12 @@ fn hit_sphere(center: Point3, radius: Float64, r: Ray) -> Float64:
     else:
         return (h - sqrt(discriminant)) / a
 
-fn ray_color(r: Ray) -> Color:
-    t = hit_sphere(Point3(0,0,-1), 0.5, r)
-    if t > 0.0:
-        N = (r(t) - Point3(0,0,-1)).unit_vector()
-        return 0.5 * Color(N.x() + 1, N.y() + 1, N.z() + 1)
+fn ray_color(r: Ray, world: HittableList) -> Color:
+    maybe_hit = world.hit(r, 0, FloatLiteral.infinity)
+    if maybe_hit:
+        print("Hit at t={}\n".format(maybe_hit.value().t))
+        return 0.5 * (maybe_hit.value().normal + Color(1,1,1))
+
     # background    
     unit_direction = r.dir.unit_vector()
     a = 0.5 * (unit_direction.y() + 1.0)
@@ -33,6 +31,11 @@ def main():
     img_height = Int(Float64(img_width) / aspect_ratio)
     img_height = max(1, img_height) # ensure img_height is at least 1
 
+    # World
+    world = HittableList()
+    world.add(HittableType(Sphere(Point3(0,0,-1), 0.5)))
+    world.add(HittableType(Sphere(Point3(0,-100.5,-1), 100)))
+    print(world)
     # Camera
     focal_length = 1.0
     viewport_height = 2.0
@@ -58,7 +61,7 @@ def main():
                 pixel_center = pixel00_loc + (Float64(i) * pixel_delta_u) + (Float64(j)*pixel_delta_v)
                 ray_direction = pixel_center - camera_center
                 r = Ray(camera_center, ray_direction)
-                pixel_color = ray_color(r)
+                pixel_color = ray_color(r, world)
                 write_color(pixel_color, img_file)
     print("\rDone.                 ", file=stderr)
     

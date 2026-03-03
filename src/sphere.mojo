@@ -2,7 +2,7 @@ from vec3 import Vec3, Point3
 from ray import Hittable, HitRecord, Ray
 from math import sqrt
 
-struct Sphere(Hittable):
+struct Sphere(Hittable & Movable & Copyable):
     var center: Point3
     var radius: Float64
 
@@ -29,5 +29,12 @@ struct Sphere(Hittable):
         return HitRecord(
             t=root,
             p=r(root),
-            normal=(r(root) - self.center) / self.radius,
+            outward_normal=(r(root) - self.center) / self.radius,
+            ray=r
         )
+    
+    fn __str__(self) -> String:
+        return "Sphere(center={}, radius={})".format(self.center, self.radius)
+
+    fn write_to[T: Writer](self, mut writer: T):
+        writer.write(self.__str__())

@@ -11,6 +11,8 @@ libc = { family = "glibc", version = "2.34" }
 
 
 [tasks]
+run = "mojo src/main.mojo"
+test = "mojo test -I src tests/"
 
 [dependencies]
 jupyterlab = ">=4.5.5,<5"
